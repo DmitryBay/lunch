@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'name' => getenv('APP_NAME'),
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
