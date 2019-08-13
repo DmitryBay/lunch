@@ -29,7 +29,7 @@ class m190810_104415_restaurants extends Migration
             'deleted_ts'=>$this->integer(),
             'created_ts'=>$this->integer(),
             'updated_ts'=>$this->integer(),
-            'place_location'=>'point not null',
+            'lnglat'=>'point not null',
             'geohash'=>$this->string(9),
             'address'=>$this->string(),
         ]);

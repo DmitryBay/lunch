@@ -10,9 +10,16 @@
  -------------------
  
  Best way to install - use docker-compose. 
+ 1) Copy .env-copy -> .env
+ 2) composer run-script docker:start
+ 3) into container
+ docker exec -it lunchio_app_1 /bin/bash   
  
-
  
+ Notes
+  -------------------
+ENV directory not used here, components, like debugging - add in *-local.php 
+For params, pls use .env file.  
  
 DIRECTORY STRUCTURE
 -------------------

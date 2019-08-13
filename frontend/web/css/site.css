@@ -118,3 +118,21 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+
+.regular-page .container {
+    /*margin-top: 12vh;*/
+    padding-top: 12vh;
+}
+
+
+.maps {
+    width: 100%;
+    height: 300px;
+}
+
+
+.maps #map {
+    height: 300px;
+}
+

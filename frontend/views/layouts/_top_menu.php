@@ -2,7 +2,7 @@
 
 
 ?>
-<nav  class="navbar navbar-expand-lg bg-primary fixed-top navbar-transparent " color-on-scroll="400">
+<nav  class="navbar navbar-expand-lg bg-primary fixed-top <?=  isset($options['transparent']) && $options['transparent']  ? ' navbar-transparent': ''?> " color-on-scroll="400">
     <div class="container">
         <div class="dropdown button-dropdown">
             <a href="/" class="dropdown-toggle" id="navbarDropdown" data-toggle="dropdown">
@@ -13,7 +13,7 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-header">Меню:</a>
                 <?=\yii\helpers\Html::a('Поиск Ресторанов',['/restaurants/map'],['class'=>'dropdown-item'])?>
-                <?=\yii\helpers\Html::a('Поиск Ресторанов',['/restaurants/add'],['class'=>'dropdown-item'])?>
+                <?=\yii\helpers\Html::a('Добавить Место',['/restaurants/add'],['class'=>'dropdown-item'])?>
 
 
 <!--                <div class="dropdown-divider"></div>-->
