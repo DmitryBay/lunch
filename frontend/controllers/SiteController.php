@@ -79,23 +79,6 @@ class SiteController extends Controller
     }
 
 
-//    public function actionSendEmail(){
-//        $htmlBody = 'Text';
-//
-//
-//        echo Yii::$app->mailer->compose()
-//            ->setFrom('no-reply@lunchio.ru')
-//            ->setTo('b)
-//            ->setSubject('Y')
-//
-////            ->setTextBody('Plain text content')
-//            ->setHtmlBody($htmlBody)
-////            ->attach('1.zip')
-////            ->attachContent('Attachment content', ['fileName' => 'attach.txt', 'contentType' => 'text/plain'])
-//
-//            ->send() ;
-//    }
-
     /**
      * Credits
      *

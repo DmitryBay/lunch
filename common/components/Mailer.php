@@ -9,7 +9,7 @@ use yii\base\InvalidConfigException;
 class Mailer extends BaseMailer
 {
 
-    public $apiEndpoint = 'api.eu.mailgun.net';
+    public $apiEndpoint = 'api.mailgun.net';
     /**
      * @throws InvalidConfigException
      */
