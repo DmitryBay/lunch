@@ -11,7 +11,7 @@ use yii\web\Controller;
 class RestaurantsController extends Controller
 {
 
-    public $layout = 'main_with_menu';
+//    public $layout = 'main_with_menu';
     public $defaultAction = 'map';
     /**
      * Displays homepage.

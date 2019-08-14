@@ -36,7 +36,7 @@ use yii\widgets\Breadcrumbs;
         <div class="row">
             <div class="col-md-6">
                 <div class="image-container image-left"
-                     style="background-image: url('fail/now-ui-kit/assets/img/login.jpg')">
+                     style="background-image: url('/img/landing_1.jpg')">
                     <!-- First image on the left side -->
                     <p class="blockquote blockquote-primary">"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
                         <br>
@@ -45,13 +45,13 @@ use yii\widgets\Breadcrumbs;
                     </p>
                 </div>
                 <!-- Second image on the left side of the article -->
-                <div class="image-container" style="background-image: url('fail/now-ui-kit/assets/img/bg3.jpg')"></div>
+                <div class="image-container" style="background-image:url('/img/landing_2.jpeg')"></div>
             </div>
             <div class="col-md-5">
                 <!-- First image on the right side, above the article -->
                 <div class="image-container image-right"
-                     style="background-image: url('fail/now-ui-kit/assets/img/bg1.jpg')"></div>
-                <h3>Что такое Lorem Ipsum?</h3>
+                     style="background-image: url('/img/landing_3.jpeg')"></div>
+                <h3>Давайте поговорим немного о питании?</h3>
                 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                 </p>
                 <p>

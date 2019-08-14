@@ -29,12 +29,7 @@ AppAsset::register($this);
 </head>
 <body class="index-page sidebar-collapse">
 <?php $this->beginBody() ?>
-<div class="wrapper" >
-    <?= $this->render('_top_menu',[
-          'options'=>[
-                  'transparent'=>false
-          ]
-    ]) ?>
+<div class="wrapper">
     <?= $content ?>
     <?= $this->render('footer') ?>
 </div>

@@ -2,6 +2,7 @@
 
 return [
     'name' => getenv('APP_NAME'),
+    'language' =>'ru',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

@@ -17,7 +17,7 @@ class AppAsset extends AssetBundle
         'dist/bootstrap-4.3.1/dist/css/bootstrap-grid.css',
         'css/site.css',
         'now-ui-kit/assets/css/bootstrap.min.css',
-        'now-ui-kit/assets/css/now-ui-kit.min.css',
+        'now-ui-kit/assets/css/now-ui-kit.css',
         'https://fonts.googleapis.com/css?family=Montserrat:400,700,200',
         'https://use.fontawesome.com/releases/v5.4.1/css/all.css',
         '/dist/growl/jquery.growl.css',
