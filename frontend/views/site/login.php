@@ -27,7 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+<!--                --><?//= $form->field($model, 'rememberMe')->checkbox([
+//                        'class'=>'check'
+//                ]) ?>
+                <?= \common\widgets\checkbox\SingleCheckboxWidget::widget([
+                    'model' => $model,
+                    'attribute' => 'rememberMe'
+                ]) ?>
 
                 <div style="color:#999;margin:1em 0">
                     Если вы забыли пароль, вы можете <?= Html::a('сбросить его', ['site/request-password-reset']) ?>.

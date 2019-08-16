@@ -11,7 +11,8 @@ use yii\widgets\Breadcrumbs;
 
 <?= $this->render('../layouts/_top_menu',[
     'options'=>[
-        'transparent'=>true
+        'transparent'=>true,
+        'color_on_scroll'=>true
     ]
 ]) ?>
 
@@ -23,7 +24,7 @@ use yii\widgets\Breadcrumbs;
 <!--            <img class="n-logo" src="/img/logo.png" alt="">-->
             <h1 class="h1-seo">Lunchio (Ланчио)</h1>
             <h3>Отличный способ сэкономить на обедах. </h3>
-            <p><a href="#"><?= Yii::t('app', 'Как это работает?') ?></a></p>
+            <p><a href="#aboutcs"><?= Yii::t('app', 'Как это работает?') ?></a></p>
         </div>
     </div>
 </div>
@@ -51,7 +52,7 @@ use yii\widgets\Breadcrumbs;
                 <!-- First image on the right side, above the article -->
                 <div class="image-container image-right"
                      style="background-image: url('/img/landing_3.jpeg')"></div>
-                <h3>Давайте поговорим немного о питании?</h3>
+                <h3 id="about">Давайте поговорим немного о питании?</h3>
                 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                 </p>
                 <p>

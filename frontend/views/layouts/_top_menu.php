@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 ?>
 <nav class="navbar navbar-expand-lg bg-primary fixed-top <?= isset($options['transparent']) && $options['transparent'] ? ' navbar-transparent' : '' ?> "
-     color-on-scroll="400">
+    <?= isset($options['color_on_scroll']) && $options['color_on_scroll'] ? 'color-on-scroll="400"' : '' ?> >
     <div class="container">
         <div class="dropdown button-dropdown">
             <a href="/" class="dropdown-toggle" id="navbarDropdown" data-toggle="dropdown">

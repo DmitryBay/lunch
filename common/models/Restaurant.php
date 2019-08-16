@@ -11,6 +11,8 @@ use yii\db\Expression;
 /**
  * This is the model class for table "restaurant".
  * TODO Note - all tables without FK
+ * TODO need table Options
+ * TODO contacts - JSON field
  *
  * @property int $id
  * @property string $title
@@ -21,6 +23,8 @@ use yii\db\Expression;
  * @property int $has_alko
  * @property int $has_sportmenu
  * @property int $has_healthmenu
+ * @property int $has_delivery
+ * @property int $type
  * @property int $is_deleted
  * @property int $deleted_ts
  * @property int $created_ts
@@ -52,6 +56,12 @@ class Restaurant extends \yii\db\ActiveRecord
         3 => '$$$',
         4 => '$$$$',
         5 => '$$$$$',
+    ];
+
+    static $_type = [
+        1 => 'Кафе',
+        2 => 'Ресторан'
+
     ];
     static $_status = [
         self::STATUS_ACTIVE => 'active',
@@ -119,11 +129,13 @@ class Restaurant extends \yii\db\ActiveRecord
          */
         return [
             [['title' ,'lat','lng'], 'required'],
-            [['has_lunch', 'has_menu', 'has_alko', 'has_sportmenu', 'has_healthmenu', 'is_deleted', 'deleted_ts', 'created_ts', 'updated_ts'], 'integer'],
+            [['type','has_lunch', 'has_menu', 'has_alko', 'has_sportmenu', 'has_healthmenu', 'is_deleted', 'deleted_ts', 'created_ts', 'updated_ts'], 'integer'],
 //            [['place_location'], 'string'],
             [['title',   'address'], 'string', 'max' => 255],
+            [['has_delivery'], 'boolean' ],
             [['desc'], 'string', 'max' => 1000],
             ['price_category', 'in', 'range' => [1,2,3,4,5]],
+
 //            [['geohash'], 'string', 'max' => 9],
             [['lat'], 'number', 'min' => -90, 'max' => 90, 'message' => 'Invalid Location'],
             [['lng'], 'number', 'min' => -180, 'max' => 180, 'message' => 'Invalid Location'],
@@ -133,6 +145,10 @@ class Restaurant extends \yii\db\ActiveRecord
                 'action' => 'homepage',
             ],
         ];
+    }
+
+    public function getUrl(){
+        return ['/restaurants/view','id'=>$this->id];
     }
 
     public function beforeSave($insert)

@@ -32,7 +32,8 @@ AppAsset::register($this);
 <div class="wrapper" >
     <?= $this->render('_top_menu',[
           'options'=>[
-                  'transparent'=>false
+                  'transparent'=>false,
+                    'color_on_scroll'=>false
           ]
     ]) ?>
     <?= $content ?>
