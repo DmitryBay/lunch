@@ -9,6 +9,8 @@ $this->title = $model->title;
         <?= \yii\helpers\Html::encode($model->title) ?>
         <div class="row">
 
+            <?var_dump($model->getAttributes())?>
+            <?var_dump($model->location)?>
         </div>
     </div>
 </div>

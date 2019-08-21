@@ -15,7 +15,6 @@ use yii\helpers\Html;
                 <h3 class=" ">Добавление нового места.</h3>
 
 
-
                 <?php $form = ActiveForm::begin(['id' => 'contact-form']); ?>
 
                 <?= $form->field($model, 'title')->textInput(['autofocus' => true]) ?>
@@ -26,24 +25,23 @@ use yii\helpers\Html;
                     <label class="control-label">Возможности</label>
                     <div>
 
-                            <?= \common\widgets\checkbox\SingleCheckboxWidget::widget([
-                                'model' => $model,
-                                'attribute' => 'has_lunch'
-                            ]) ?>
+                        <?= \common\widgets\checkbox\SingleCheckboxWidget::widget([
+                            'model' => $model,
+                            'attribute' => 'has_lunch'
+                        ]) ?>
 
 
 
-                            <?= \common\widgets\checkbox\SingleCheckboxWidget::widget([
-                                'model' => $model,
-                                'attribute' => 'has_menu'
-                            ]) ?>
+                        <?= \common\widgets\checkbox\SingleCheckboxWidget::widget([
+                            'model' => $model,
+                            'attribute' => 'has_menu'
+                        ]) ?>
 
 
-                            <?= \common\widgets\checkbox\SingleCheckboxWidget::widget([
-                                'model' => $model,
-                                'attribute' => 'has_alko'
-                            ]) ?>
-
+                        <?= \common\widgets\checkbox\SingleCheckboxWidget::widget([
+                            'model' => $model,
+                            'attribute' => 'has_alko'
+                        ]) ?>
 
 
                     </div>
@@ -91,13 +89,13 @@ use yii\helpers\Html;
                 <?= $form->field($model, 'type')->dropDownList($model::$_type) ?>
 
 
-                <?= $form->field($model, 'reCaptcha')->widget(
-                    \himiklab\yii2\recaptcha\ReCaptcha3::className(),
-                    [
-//            'siteKey' => 'your siteKey', // unnecessary is reCaptcha component was set up
-                        'action' => 'homepage',
-                    ]
-                )->label(false) ?>
+<!--                --><?//= $form->field($model, 'reCaptcha')->widget(
+//                    \himiklab\yii2\recaptcha\ReCaptcha3::className(),
+//                    [
+////            'siteKey' => 'your siteKey', // unnecessary is reCaptcha component was set up
+//                        'action' => 'homepage',
+//                    ]
+//                )->label(false) ?>
 
                 <?= $form->field($model, 'address')->widget(\common\widgets\google\GoogleAutocompleteWidget::class) ?>
 

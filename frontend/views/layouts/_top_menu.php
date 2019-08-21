@@ -12,7 +12,7 @@ use yii\helpers\Html;
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-header">Меню:</a>
-                <?= Html::a('Поиск Ресторанов', ['/restaurants/map'], ['class' => 'dropdown-item']) ?>
+                <?= Html::a('Поиск Ресторанов', ['/restaurants'], ['class' => 'dropdown-item']) ?>
                 <?= Html::a('Добавить Место', ['/restaurants/add'], ['class' => 'dropdown-item']) ?>
 
 

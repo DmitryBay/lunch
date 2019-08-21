@@ -11,7 +11,7 @@ return [
 
     'username' => getenv('MYSQL_USERNAME'),
     'password' => getenv('MYSQL_PASSWORD'),
-    'charset' => 'utf8mb4',
+    'charset' => 'utf8',
     'attributes' => [
         PDO::ATTR_PERSISTENT => true
     ],

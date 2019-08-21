@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
         'https://fonts.googleapis.com/css?family=Montserrat:400,700,200',
         'https://use.fontawesome.com/releases/v5.4.1/css/all.css',
         '/dist/growl/jquery.growl.css',
+
         '/now-ui-kit/assets/demo/demo.css',
 
     ];
@@ -35,7 +36,9 @@ class AppAsset extends AssetBundle
         'now-ui-kit/assets/js/now-ui-kit.min.js',
 //        'https://kit.fontawesome.com/16b15ce522.js',
         '/dist/growl/jquery.growl.js',
+        '/js/slimscroll.js',
         '/js/main.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.2/jsrender.min.js',
     ];
     public $depends = [
         'yii\web\JqueryAsset',

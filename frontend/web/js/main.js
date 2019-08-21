@@ -9,14 +9,14 @@
 $('a.available-soon').click(function(e){
     e.preventDefault();
 
-    $.growl.notice({ message: "This functional will available soon." });
+    $.growl.notice({ message: "Эта функция будет скоро доступна." });
 });
 
 function showError(xhr, code, text) {
     'use strict';
     if (xhr.responseJSON) {
-        $.growl.error({message: 'Error(' + xhr.status + '): ' + xhr.responseJSON.error_text});
+        $.growl.error({message: 'Ошибка(' + xhr.status + '): ' + xhr.responseJSON.error_text});
     } else {
-        $.growl.error({message: 'Error(' + xhr.status + '): ' + text});
+        $.growl.error({message: 'Ошибка(' + xhr.status + '): ' + text});
     }
 }
