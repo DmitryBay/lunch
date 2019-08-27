@@ -25,8 +25,7 @@ class m190810_104415_restaurants extends Migration
             'has_sportmenu'=>$this->smallInteger(1)->notNull()->defaultValue(0) ,
             'has_healthmenu'=>$this->smallInteger(1)->notNull()->defaultValue(0) ,
 
-            'is_deleted'=>$this->smallInteger(1)->notNull()->defaultValue(0),
-            'deleted_ts'=>$this->integer(),
+             'deleted_ts'=>$this->integer(),
             'created_ts'=>$this->integer(),
             'updated_ts'=>$this->integer(),
             'lnglat'=>'point not null',

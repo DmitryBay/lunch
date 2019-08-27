@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use common\components\BaseController;
+use common\models\Files;
 use common\models\User;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
@@ -15,11 +17,13 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     /**
      * {@inheritdoc}
@@ -37,7 +41,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout','upload-image'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -54,6 +58,21 @@ class SiteController extends Controller
 
 
 
+    public function beforeAction($action)
+    {
+        // ...set `$this->enableCsrfValidation` here based on some conditions...
+        // call parent method that will check CSRF if such property is true.
+        if ($action->id === 'upload-image') {
+            # code...
+            $this->enableCsrfValidation = false;
+        }
+
+        if ($action->id === 'rotate-image') {
+            # code...
+            $this->enableCsrfValidation = false;
+        }
+        return parent::beforeAction($action);
+    }
 
 
     /**
@@ -77,6 +96,9 @@ class SiteController extends Controller
     }
 
 
+
+
+    // @todo soc auth
     public function onAuthSuccess($client)
     {
         $attributes = $client->getUserAttributes();
@@ -217,6 +239,42 @@ class SiteController extends Controller
             return $this->render('contact', [
                 'model' => $model,
             ]);
+        }
+    }
+
+
+    public function actionUploadImage()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $file = UploadedFile::getInstanceByName('uploadfile');
+
+        if ($file) {
+            $model = Files::sendImgToS3($file);
+
+            $url = str_replace('_big', '_master', $model->filename);
+            $moderate = Yii::$app->moderate->moderateImage($url);
+            if ($moderate['rating_index'] == ModerateComponent::ADULT_RATING_ADULT) {
+                return self::returnError(ApiController::ERROR_VALIDATION, 'ADULT_IMAGE_DETECT');
+            }
+
+            $model->updateAttributes(['status' => 10]);
+
+            return [
+                'success' => true,
+                'profile_id' => Yii::$app->cp->id,
+                'user_id' => Yii::$app->user->id,
+
+                'file' => $model->is_ready
+                    ? $model->getAttributes(['id', 'filename', 'master', 'type', 'preview', 'url', 'align', 'httpFilename', 'proxyFilename'])
+                    : ['id' => $model->id, 'master' => $model->master, 'filename' => $model->master, 'preview' => $model->master, 'httpFilename' => $model->httpFilename, 'proxyFilename' => $model->proxyFilename],
+            ];
+        } else {
+            return [
+                'success' => false,
+                'profile_id' => Yii::$app->cp->id,
+                'msg' => 'NO_FILE',
+            ];
         }
     }
 

@@ -13,6 +13,12 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'blitline' => [
+            'class' => 'app\components\BlitlineComponent',
+            'defaultBucket' => 'communitya-mainstorage',
+            'apiKey' => getenv('BLITLINE_APPLICATION_ID'),
+//            's3region' => 'us-east-2',
+        ],
         'mailer' => [
             //'class' => 'yii\swiftmailer\Mailer',
 //            'class' => \YarCode\Yii2\Mailgun\Mailer::class,

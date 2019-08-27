@@ -36,8 +36,10 @@ class AppAsset extends AssetBundle
         'now-ui-kit/assets/js/now-ui-kit.min.js',
 //        'https://kit.fontawesome.com/16b15ce522.js',
         '/dist/growl/jquery.growl.js',
+        '/dist/jquery-ui-custom.js',
         '/js/slimscroll.js',
         '/js/main.js',
+        '/dist/SimpleAjaxUploader.js',
         'https://cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.2/jsrender.min.js',
     ];
     public $depends = [

@@ -1,5 +1,3 @@
-
-
 function getRectFromBounds(bounds) {
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
@@ -10,7 +8,7 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
-        $.growl.error({ message: "Geolocation is not supported by this browser." });
+        $.growl.error({message: "Geolocation is not supported by this browser."});
         // x.innerHTML = "";
     }
 }
@@ -40,11 +38,9 @@ function showPosition(position) {
 })(jQuery);
 
 
-
-
-$("body").on("click", ".rest-results .item a", function (event) {
+$("body").on("click", ".search-results    .item a", function (event) {
     event.preventDefault();
-    $('.place-results .item').removeClass('active');
+    $('.rest-results .item').removeClass('active');
 
     var obj = this;
     var id = $(obj).closest('.item').attr('data-id');
@@ -63,27 +59,18 @@ $("body").on("click", ".rest-results .item a", function (event) {
         data
         ,
         function (respond) {
-            if (respond['success'] == '1') { //если ошибки нет то продолжаем
-                $('.place-info').html(respond.html);
-                $(obj).closest('.item').addClass('active');
 
+            $('.rest-info').removeClass('d-none').html(respond.html);
+            $(obj).closest('.item').addClass('active');
+            var latlngset = new google.maps.LatLng(respond.location.lat, respond.location.lng);
+            map.setCenter(latlngset);
+            // map.setZoom(12);
 
-                var latlngset = new google.maps.LatLng(respond.lat, respond.lng);
-                map.setCenter(latlngset);
-                // map.setZoom(12);
+            history.pushState('data', '', '?id=' + respond.id);
 
-                history.pushState('data', '', '?id=' + respond.id);
+            //  $(obj).closest('.dropdown-block').find('.dropdown-toggle').html(respond['textStatus']) ;
+            // $(obj).closest('.dropdown-menu') .html(respond['textActions']) ;
 
-                //  $(obj).closest('.dropdown-block').find('.dropdown-toggle').html(respond['textStatus']) ;
-                // $(obj).closest('.dropdown-menu') .html(respond['textActions']) ;
-
-
-            } else if (respond['success'] == '0') {
-                alert(respond['error_text']);
-
-                $(obj).attr('data-action', action);
-
-            }
 
         }
     ).fail(function (xhr, status, error) {
@@ -118,12 +105,12 @@ function loadPlaceInfo(dataId, map) {
         '/restaurants/info',
         data,
         function (respond) {
-                $('.place-info').html(respond.html);
-                var latlngset = new google.maps.LatLng(respond.lat, respond.lng);
-                map.setCenter(latlngset);
-                // map.setZoom(12);
-                //  $(obj).closest('.dropdown-block').find('.dropdown-toggle').html(respond['textStatus']) ;
-                // $(obj).closest('.dropdown-menu') .html(respond['textActions']) ;
+            $('.rest-info').removeClass('d-none').html(respond.html);
+            var latlngset = new google.maps.LatLng(respond.location.lat, respond.location.lng);
+            map.setCenter(latlngset);
+            // map.setZoom(12);
+            //  $(obj).closest('.dropdown-block').find('.dropdown-toggle').html(respond['textStatus']) ;
+            // $(obj).closest('.dropdown-menu') .html(respond['textActions']) ;
         }
     ).fail(function (xhr, status, error) {
 
@@ -162,6 +149,10 @@ function updateResult(form) {
     //console.log(this.params);
 }
 
+$('body').on('change', '#search-form input', function (e) {
+    // alert();
+    updateResult($('#search-form'));
+});
 
 function addMarkers(newMarkers) {
 
@@ -175,19 +166,19 @@ function addMarkers(newMarkers) {
 
         var latlngset = new google.maps.LatLng(item.lat, item.lng);
 
-        // console.log(item);
-        var ic = { //icon
-            url: '', // url
-            scaledSize: new google.maps.Size(30, 30), // scaled size
-            origin: new google.maps.Point(0, 0), // origin
-            anchor: new google.maps.Point(0, 0), // anchor
-            //define the shape
-            shape: {coords: [17, 17, 18], type: 'circle'},
-            //set optimized to false otherwise the marker  will be rendered via canvas
-            //and is not accessible via CSS
-            optimized: false,
-            title: 'spot'
-        };
+
+        // var ic = { //icon
+        //     url: '', // url
+        //     scaledSize: new google.maps.Size(30, 30), // scaled size
+        //     origin: new google.maps.Point(0, 0), // origin
+        //     anchor: new google.maps.Point(0, 0), // anchor
+        //     //define the shape
+        //     shape: {coords: [17, 17, 18], type: 'circle'},
+        //     //set optimized to false otherwise the marker  will be rendered via canvas
+        //     //and is not accessible via CSS
+        //     optimized: false,
+        //     title: 'spot'
+        // };
 
         var marker = new google.maps.Marker({
             map: map,
@@ -219,6 +210,172 @@ function addMarkers(newMarkers) {
 
 }
 
+function startRestUploader(widgetId) {
+
+    console.log('--- Start Uploader' + widgetId);
+
+    var $widget = $(widgetId);
+    var url = $widget.attr('data-url');
+    var $filesBlock = $(widgetId).find('.files_block');
+
+    var uploader = new ss.SimpleUpload({
+        button: $widget,
+        url: url,
+        name: 'uploadfile',
+        multipart: true,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+        hoverClass: 'hover',
+        focusClass: 'focus',
+        multipleSelect: true,
+        multiple: true,
+        customHeaders: {
+            'X-CSRF-Token': $('meta[name=csrf-token]').attr("content")
+        },
+        responseType: 'json',
+        startXHR: function () {
+            $widget.html('<i class="fa fa-spinner fa-pulse" aria-hidden="true"></i>');
+        },
+        onSubmit: function () {
+
+        },
+        onComplete: function (filename, response) {
+
+            if (!response) {
+                $.growl.error({message: 'Unable to upload file [no response]'});
+                return;
+            }
+
+            if (response.msg) {
+                 $.growl({message: escapeTags(response.msg)});
+            } else {
+                $.growl.error({message: "An error occurred and the upload failed."});
+
+            }
+            $widget.html('<i class="fas fa-image"></i> Добавить фотографию места');
+        },
+        onError: function (filename, type, status, statusText, response, uploadBtn, size) {
+            $widget.html('<i class="fas fa-image"></i> Добавить фотографию места');
+            var json = JSON.parse(response);
+            $.growl.error({message: 'Error(' + status + '): ' + json.error_text});
+        }
+    });
+
+    $widget.on("click", ".files_block a.delete", function () {
+
+    });
+    $widget.on("click", ".files_block a.delete", function () {
+        var size_ul = $(this).closest('ul.files-ui').find('li').length - 1;
+        var ul_papa = $(this).closest('.files_block');
+        $(this).closest('li').remove();
+        if (size_ul == 0) {
+            ul_papa.hide();
+        }
+        return false;
+    });
+    $widget.on("click", ".files_block a.revert", function (event) {
+
+
+        var obj = $(this).closest('li');
+        var id = $(this).closest('li').attr('data-key');
+
+        $(obj).find('.shadow').addClass('hidden');
+        $(obj).find('.loader').removeClass('hidden');
+
+        $.ajax({
+            type: "POST", // or GET
+            url: "/site/rotate-image",
+            data: {id: id, rotate: 'left'},
+            success: function (response) {
+
+                $(obj).find('.shadow').removeClass('hidden');
+                $(obj).find('.loader').addClass('hidden');
+                if (response['success'] == true) {
+                    $(obj).attr('data-key', response.file.id);
+                    $(obj).attr('class', response.file.rotateClass);
+
+                    $(obj).find('.img_block .img').attr('style', "background: url('" + escapeTags(response.file.preview) + "') center no-repeat; background-size: cover; ");
+                    $(obj).find('input').attr('value', response.file.id);
+                } else {
+                    console.log(response['error_text']);
+                }
+
+            },
+            error: function () {
+                // something's gone wrong.
+            }
+        });
+        //
+        //
+        // alert('revert');
+
+        event.preventDefault();
+
+
+    });
+    $("body").on("click", ".files_block a.revert_n", function (event) {
+
+
+        var obj = $(this).closest('li');
+        var id = $(this).closest('li').attr('data-key');
+        // $(obj).find('.shadow').html('<i class="fa  fa-spinner  fa-pulse"  aria-hidden="true" ></i>');
+        $(obj).find('.shadow').addClass('hidden');
+        $(obj).find('.loader').removeClass('hidden');
+
+
+        $.ajax({
+            type: "POST", // or GET
+            url: "/site/rotate-image",
+            data: {id: id, rotate: 'right'},
+            success: function (response) {
+
+                if (response.success == true) {
+
+                    $(obj).find('.shadow').removeClass('hidden');
+                    $(obj).find('.loader').addClass('hidden');
+                    $(obj).attr('data-key', response.file.id);
+                    $(obj).attr('class', response.file.rotateClass);
+                    // $(obj).find('.shadow').html('<a href="#" class="revert"></a><a href="#" class="delete"></a>');
+                    $(obj).find('.img_block .img').attr('style', "background: url('" + escapeTags(response.file.preview) + "') center no-repeat; background-size: cover; ");
+                    $(obj).find('input').attr('value', response.file.id);
+
+                } else {
+                    console.log(response['error_text']);
+                }
+                console.log(response);
+                //$("#someElement").doSomething();
+            },
+            error: function () {
+                // something's gone wrong.
+            }
+        });
+        //
+        //
+        // alert('revert');
+
+        event.preventDefault();
+
+
+    });
+    $("body").on("click", ".files_block a.checkbox", function (event) {
+
+
+        $(this).closest('ul').find('li').removeClass('active');
+        $(this).closest('li').addClass('active');
+        $('.main_image').val($(this).closest('li').attr('data-key'));
+
+
+        //
+        //
+        // alert('revert');
+
+        event.preventDefault();
+
+
+    });
+
+    $(".files-ui").sortable();
+}
+
 
 var map = new google.maps.Map(document.getElementById('map'), {
     center: {lng: center['lng'], lat: center['lat']},
@@ -228,7 +385,6 @@ var map = new google.maps.Map(document.getElementById('map'), {
 
 
 var latlngset = new google.maps.LatLng(center.lat, center.lng);
-
 
 
 // var ic = { //icon
@@ -253,15 +409,13 @@ var latlngset = new google.maps.LatLng(center.lat, center.lng);
 // });
 
 
-// updateResult($('#search-form'));
+updateResult($('#search-form'));
 
 
 $(function () {
-    $('.place-info [data-toggle="popover"]').popover();
-
-
-    $('.place-results').slimScroll({
-        height: '500px',
+    // $('.restaurant-info [data-toggle="popover"]').popover();
+    $('.search-results').slimScroll({
+        height: '450px',
         // railVisible: true,
         alwaysVisible: true,
         // start: 'bottom'
@@ -272,32 +426,45 @@ map.addListener('zoom_changed', function () {
     // console.log('zoom: ' + map.getZoom());
     var rect = getRectFromBounds(map.getBounds());
 
-    $('#placesearch-minlat').val(rect[0]);
-    $('#placesearch-maxlat').val(rect[2]);
+    $('#restaurantsearch-minlat').val(rect[0]);
+    $('#restaurantsearch-maxlat').val(rect[2]);
 
-    $('#placesearch-minlng').val(rect[3]);
-    $('#placesearch-maxlng').val(rect[1]);
+    $('#restaurantsearch-minlng').val(rect[3]);
+    $('#restaurantsearch-maxlng').val(rect[1]);
     updateResult($('#search-form'));
-
-
     console.log('zoom changed');
-    // console.log(  map.getBounds());
-    // infowindow.setContent('Zoom: ' + map.getZoom());
 });
-
-
 google.maps.event.addListener(map, 'dragend', function () {
     // var bon = map.getBounds();
     var rect = getRectFromBounds(map.getBounds());
 
-    $('#placesearch-minlat').val(rect[2]);
-    $('#placesearch-maxlat').val(rect[0]);
-    $('#placesearch-minlng').val(rect[3]);
-    $('#placesearch-maxlng').val(rect[1]);
+    $('#restaurantsearch-minlat').val(rect[2]);
+    $('#restaurantsearch-maxlat').val(rect[0]);
+    $('#restaurantsearch-minlng').val(rect[3]);
+    $('#restaurantsearch-maxlng').val(rect[1]);
     updateResult($('#search-form'));
     console.log('dragend');
-
 });
 
+// map markers
 var markers = [];
 
+// No business on map
+var noPoi = [
+    {
+        featureType: "poi",
+        stylers: [
+            {visibility: "off"}
+        ]
+    }
+];
+map.setOptions({styles: noPoi});
+
+
+$(".rest-info").on("click", "a.close-rest", function (e) {
+
+    e.preventDefault();
+
+    $(this).closest(".rest-info").addClass("d-none").html("");
+    return false;
+});

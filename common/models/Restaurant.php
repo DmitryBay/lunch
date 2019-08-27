@@ -25,13 +25,15 @@ use yii\db\Expression;
  * @property int $has_healthmenu
  * @property int $has_delivery
  * @property int $type
- * @property int $is_deleted
  * @property int $deleted_ts
  * @property int $created_ts
  * @property int $price_category
  * @property int $updated_ts
  * @property string $lnglat
  * @property string $geohash
+ * @property array $url
+ * @property string $lat
+ * @property string $lng
  * @property string $address
  */
 class Restaurant extends \yii\db\ActiveRecord
@@ -41,6 +43,7 @@ class Restaurant extends \yii\db\ActiveRecord
     public $lng;
     public $reCaptcha;
 
+    const STATUS_DELETED = 0;
     const STATUS_NOT_MODERATION = 1;
     const STATUS_UNDER_MODERATION = 3;
     const STATUS_BLOCKED_SPAM = 5;
@@ -136,7 +139,7 @@ class Restaurant extends \yii\db\ActiveRecord
          */
         return [
             [['title', 'lat', 'lng'], 'required'],
-            [['type', 'has_lunch', 'has_menu', 'has_alko', 'has_sportmenu', 'has_healthmenu', 'is_deleted', 'deleted_ts', 'created_ts', 'updated_ts'], 'integer'],
+            [['type', 'has_lunch', 'has_menu', 'has_alko', 'has_sportmenu', 'has_healthmenu'], 'integer'],
 //            [['place_location'], 'string'],
             [['title', 'address'], 'string', 'max' => 255],
             [['has_delivery'], 'boolean'],
@@ -203,12 +206,13 @@ class Restaurant extends \yii\db\ActiveRecord
             'title' => 'Название',
             'logo' => 'Logo',
             'desc' => 'Описание',
-            'has_lunch' => 'Has Lunch',
-            'has_menu' => 'Has Menu',
-            'has_alko' => 'Has Alko',
-            'has_sportmenu' => 'Has Sportmenu',
-            'has_healthmenu' => 'Has Healthmenu',
-            'is_deleted' => 'Is Deleted',
+            'price_category' => 'Ценовая категория',
+            'has_lunch' => 'Бизнес ланч?',
+            'has_menu' => 'Описано ли меню',
+            'has_alko' => 'Алкоголь?',
+            'has_sportmenu' => 'Спортменю?',
+            'has_healthmenu' => 'Есть ли ПП?',
+
             'deleted_ts' => 'Deleted Ts',
             'created_ts' => 'Created Ts',
             'updated_ts' => 'Updated Ts',

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\components\BaseController;
 use common\models\Restaurant;
 use common\models\search\RestaurantSearch;
 use yii\filters\AccessControl;
@@ -13,7 +14,7 @@ use yii\web\Controller;
 /**
  * Site controller
  */
-class RestaurantsController extends Controller
+class RestaurantsController extends BaseController
 {
 
 
@@ -29,7 +30,7 @@ class RestaurantsController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['index','view','ajax-search'],
+                        'actions' => ['index','view','ajax-search','info'],
                         'allow' => true,
                         'roles' => ['@', '?'],
                     ],
@@ -65,15 +66,12 @@ class RestaurantsController extends Controller
 
     public function actionAjaxSearch()
     {
-
-
         $searchModel = new RestaurantSearch();
-
         $query = $searchModel->search(\Yii::$app->request->post());
-
         return $this->asJson([
             'success' => true,
             'items' => array_values(ArrayHelper::map($query->limit(100)->all(), 'id', function ($model) {
+                /** @var $model Restaurant */
                 return [
                     'id' => $model->id,
                     'title' => $model->title,
@@ -82,14 +80,12 @@ class RestaurantsController extends Controller
                     'lng' =>  $model->lng,
                     'lat' =>  $model->lat,
                     'phone' =>  null,
+                    'price_category' =>  $model->price_category,
                     'address' =>  $model->address,
 
                 ];
             }))
-
         ]);
-//        $model->search();
-
 
     }
 
@@ -113,6 +109,28 @@ class RestaurantsController extends Controller
         $model = Restaurant::find()->andWhere(['id' => $id])->one();
 
         return $this->render('view', ['model' => $model]);
+    }
+
+    public function actionInfo(){
+        $id = \Yii::$app->request->post('id');
+
+        \Yii::$app->response->format = 'json';
+        if (!$id) {
+            return self::returnError(self::ERROR_NOTFOUND);
+        }
+        $model = Restaurant::findOne(['id'=>$id,'status'=>Restaurant::STATUS_ACTIVE]);
+
+        if (!$model){
+            return self::returnError(self::ERROR_NOTFOUND);
+        }
+
+        return [
+          'html'=>$this->renderPartial('_view',['model'=>$model]),
+            'location'=>$model->location
+        ];
+
+
+
     }
 
 }
