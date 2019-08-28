@@ -34,6 +34,27 @@ class RestaurantFiles extends \yii\db\ActiveRecord
         ];
     }
 
+
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthor()
+    {
+        return $this->hasOne(Files::className(), ['id' => 'files_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRestaurant()
+    {
+        return $this->hasOne(Restaurant::className(), ['id' => 'rest_id']);
+    }
+
+
+
     /**
      * {@inheritdoc}
      */

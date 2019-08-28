@@ -1,22 +1,24 @@
 <?php
+
 namespace frontend\controllers;
 
 use common\components\BaseController;
 use common\models\Files;
+use common\models\LoginForm;
+use common\models\Restaurant;
+use common\models\RestaurantFiles;
 use common\models\User;
+use frontend\models\ContactForm;
+use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResendVerificationEmailForm;
+use frontend\models\ResetPasswordForm;
+use frontend\models\SignupForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
-use yii\web\BadRequestHttpException;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use yii\filters\VerbFilter;
+use yii\web\BadRequestHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
@@ -41,7 +43,7 @@ class SiteController extends BaseController
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout','upload-image'],
+                        'actions' => ['logout', 'upload-image', 'test'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -55,7 +57,6 @@ class SiteController extends BaseController
             ],
         ];
     }
-
 
 
     public function beforeAction($action)
@@ -94,8 +95,6 @@ class SiteController extends BaseController
             ],
         ];
     }
-
-
 
 
     // @todo soc auth
@@ -169,7 +168,8 @@ class SiteController extends BaseController
     }
 
 
-    public function actionPrivacy(){
+    public function actionPrivacy()
+    {
         return $this->render('privacy');
     }
 
@@ -243,7 +243,7 @@ class SiteController extends BaseController
     }
 
 
-    public function actionUploadImage()
+    public function actionUploadImage($type = null, $id = null)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -253,29 +253,51 @@ class SiteController extends BaseController
             $model = Files::sendImgToS3($file);
 
             $url = str_replace('_big', '_master', $model->filename);
-            $moderate = Yii::$app->moderate->moderateImage($url);
-            if ($moderate['rating_index'] == ModerateComponent::ADULT_RATING_ADULT) {
-                return self::returnError(ApiController::ERROR_VALIDATION, 'ADULT_IMAGE_DETECT');
-            }
+//            $moderate = Yii::$app->moderate->moderateImage($url);
+//            if ($moderate['rating_index'] == ModerateComponent::ADULT_RATING_ADULT) {
+//                return self::returnError(ApiController::ERROR_VALIDATION, 'ADULT_IMAGE_DETECT');
+//            }
 
-            $model->updateAttributes(['status' => 10]);
+            if ($id && $type):
+                switch ($type) {
+
+                    case('restaurant'):
+                        $modelFile = new RestaurantFiles();
+                        $targetModel = Restaurant::findOne(['id' => $id]);
+
+                        if ($targetModel){
+                            $modelFile->files_id = $model->id;
+                            $modelFile->link('restaurant', $targetModel);
+//                            $modelFile->link('files', $model);
+                        }
+
+
+
+                    default:
+                        break;
+                }
+            endif;
+
+            // @todo add auto moderation
+            $model->updateAttributes(['status' => Files::DEFAULT_STATUS]);
 
             return [
                 'success' => true,
-                'profile_id' => Yii::$app->cp->id,
                 'user_id' => Yii::$app->user->id,
-
                 'file' => $model->is_ready
-                    ? $model->getAttributes(['id', 'filename', 'master', 'type', 'preview', 'url', 'align', 'httpFilename', 'proxyFilename'])
-                    : ['id' => $model->id, 'master' => $model->master, 'filename' => $model->master, 'preview' => $model->master, 'httpFilename' => $model->httpFilename, 'proxyFilename' => $model->proxyFilename],
+                    ? $model->getAttributes(['id', 'filename', 'preview', 'master'])
+                    : $model->getAttributes(['id', 'filename', 'preview', 'master']),
             ];
         } else {
-            return [
-                'success' => false,
-                'profile_id' => Yii::$app->cp->id,
-                'msg' => 'NO_FILE',
-            ];
+            return self::returnError(self::ERROR_BADREQUEST, 'NO_FILE');
+
         }
+    }
+
+    public function actionUploadEnd($id)
+    {
+        //@todo  delete master image
+        return Files::updateAll(['is_ready' => 1], ['id' => $id]);
     }
 
     /**
@@ -359,8 +381,8 @@ class SiteController extends BaseController
      * Verify email address
      *
      * @param string $token
-     * @throws BadRequestHttpException
      * @return yii\web\Response
+     * @throws BadRequestHttpException
      */
     public function actionVerifyEmail($token)
     {

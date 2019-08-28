@@ -248,9 +248,11 @@ function startRestUploader(widgetId) {
             if (response.msg) {
                  $.growl({message: escapeTags(response.msg)});
             } else {
-                $.growl.error({message: "An error occurred and the upload failed."});
-
+                // $.growl.error({message: "An error occurred and the upload failed."});
             }
+
+
+
             $widget.html('<i class="fas fa-image"></i> Добавить фотографию места');
         },
         onError: function (filename, type, status, statusText, response, uploadBtn, size) {

@@ -26,8 +26,8 @@
         "himiklab/yii2-recaptcha-widget" : "*",
         "yarcode/yii2-mailgun-mailer": "^1.1",
         "php-http/guzzle6-adapter": "^1.1",
-        "detailnet/blitline": "^1.0"
-
+        "detailnet/blitline": "^1.0",
+        "frostealth/yii2-aws-s3": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

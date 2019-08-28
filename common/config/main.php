@@ -14,10 +14,10 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
         'blitline' => [
-            'class' => 'app\components\BlitlineComponent',
-            'defaultBucket' => 'communitya-mainstorage',
+            'class' => 'common\components\BlitlineComponent',
+            'defaultBucket' =>  getenv('S3_DEFAULTBUCKET'),
             'apiKey' => getenv('BLITLINE_APPLICATION_ID'),
-//            's3region' => 'us-east-2',
+            's3region' => getenv('S3_REGION'),
         ],
         'mailer' => [
             //'class' => 'yii\swiftmailer\Mailer',
@@ -32,6 +32,17 @@ return [
             //   'textLayout' => 'my/layout',  // custome layout
             'htmlLayout' => 'layouts/html', // disable layout
             //        'apiKey' => getenv('SENDGRID_API_KEY'),
+        ],
+        's3' => [
+            'class' => 'frostealth\yii2\aws\s3\Service',
+            'credentials' => [ // Aws\Credentials\CredentialsInterface|array|callable
+                'key' => getenv('S3_KEY'),
+                'secret' => getenv('S3_SECRET'),
+
+            ],
+            'region' => getenv('S3_REGION'),
+            'defaultBucket' => getenv('S3_DEFAULTBUCKET'),
+            'defaultAcl' => 'public-read',
         ],
     ],
 ];

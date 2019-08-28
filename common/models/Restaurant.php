@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use app\models\MProfilePrivacy;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -79,6 +80,15 @@ class Restaurant extends \yii\db\ActiveRecord
         self::STATUS_UNDER_MODERATION => 'under moderation',
 
     ];
+
+
+
+    public function getRestaurantFiles()
+    {
+        return $this->hasMany(RestaurantFiles::className(), ['rest_id' => 'id']);
+    }
+
+
 
     /**
      * {@inheritdoc}

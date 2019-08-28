@@ -21,7 +21,7 @@ use yii\helpers\Html;
     </div>
 
 
-    <a href="#" id="rest-uploader" data-url="<?= \yii\helpers\Url::to(['/site/upload-image']) ?>" class="float-right"><i class="fas fa-image"></i> Добавить фотографию места</a>
+    <a href="#" id="rest-uploader" data-url="<?= \yii\helpers\Url::to(['/site/upload-image','type'=>'restaurant','id'=>$model->id]) ?>" class="float-right"><i class="fas fa-image"></i> Добавить фотографию места</a>
     <h5>Photos </h5>
 
     <?if (0): // images block?>

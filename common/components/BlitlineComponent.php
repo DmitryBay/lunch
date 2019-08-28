@@ -5,6 +5,7 @@ namespace  common\components;
  * User: dmitry
  */
 
+use common\models\Files;
 use Detail\Blitline\BlitlineClient;
 use yii\helpers\Url;
 
@@ -85,7 +86,7 @@ class BlitlineComponent  extends  \yii\base\Component{
             )
         ;
 
-        $job->setOption('postback_url' , Url::to(['/api/site/upload-end','id'=>$modelId ], true));
+        $job->setOption('postback_url' , Url::to(['/site/upload-end','id'=>$modelId ], true));
 
         if (isset($config['version'])) {
             $job->setVersion($config['version']);
@@ -106,6 +107,8 @@ class BlitlineComponent  extends  \yii\base\Component{
         return $response;
 
     }
+
+
 
 
     function waitingJob($id){
