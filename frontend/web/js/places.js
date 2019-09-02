@@ -64,12 +64,10 @@ $("body").on("click", ".search-results    .item a", function (event) {
             $(obj).closest('.item').addClass('active');
             var latlngset = new google.maps.LatLng(respond.location.lat, respond.location.lng);
             map.setCenter(latlngset);
-            // map.setZoom(12);
+
 
             history.pushState('data', '', '?id=' + respond.id);
-
-            //  $(obj).closest('.dropdown-block').find('.dropdown-toggle').html(respond['textStatus']) ;
-            // $(obj).closest('.dropdown-menu') .html(respond['textActions']) ;
+            startRestUploader('#rest-uploader');
 
 
         }
@@ -108,9 +106,10 @@ function loadPlaceInfo(dataId, map) {
             $('.rest-info').removeClass('d-none').html(respond.html);
             var latlngset = new google.maps.LatLng(respond.location.lat, respond.location.lng);
             map.setCenter(latlngset);
-            // map.setZoom(12);
-            //  $(obj).closest('.dropdown-block').find('.dropdown-toggle').html(respond['textStatus']) ;
-            // $(obj).closest('.dropdown-menu') .html(respond['textActions']) ;
+            history.pushState('data', '', '?id=' + respond.id);
+
+            startRestUploader('#rest-uploader');
+
         }
     ).fail(function (xhr, status, error) {
 
@@ -262,120 +261,6 @@ function startRestUploader(widgetId) {
         }
     });
 
-    $widget.on("click", ".files_block a.delete", function () {
-
-    });
-    $widget.on("click", ".files_block a.delete", function () {
-        var size_ul = $(this).closest('ul.files-ui').find('li').length - 1;
-        var ul_papa = $(this).closest('.files_block');
-        $(this).closest('li').remove();
-        if (size_ul == 0) {
-            ul_papa.hide();
-        }
-        return false;
-    });
-    $widget.on("click", ".files_block a.revert", function (event) {
-
-
-        var obj = $(this).closest('li');
-        var id = $(this).closest('li').attr('data-key');
-
-        $(obj).find('.shadow').addClass('hidden');
-        $(obj).find('.loader').removeClass('hidden');
-
-        $.ajax({
-            type: "POST", // or GET
-            url: "/site/rotate-image",
-            data: {id: id, rotate: 'left'},
-            success: function (response) {
-
-                $(obj).find('.shadow').removeClass('hidden');
-                $(obj).find('.loader').addClass('hidden');
-                if (response['success'] == true) {
-                    $(obj).attr('data-key', response.file.id);
-                    $(obj).attr('class', response.file.rotateClass);
-
-                    $(obj).find('.img_block .img').attr('style', "background: url('" + escapeTags(response.file.preview) + "') center no-repeat; background-size: cover; ");
-                    $(obj).find('input').attr('value', response.file.id);
-                } else {
-                    console.log(response['error_text']);
-                }
-
-            },
-            error: function () {
-                // something's gone wrong.
-            }
-        });
-        //
-        //
-        // alert('revert');
-
-        event.preventDefault();
-
-
-    });
-    $("body").on("click", ".files_block a.revert_n", function (event) {
-
-
-        var obj = $(this).closest('li');
-        var id = $(this).closest('li').attr('data-key');
-        // $(obj).find('.shadow').html('<i class="fa  fa-spinner  fa-pulse"  aria-hidden="true" ></i>');
-        $(obj).find('.shadow').addClass('hidden');
-        $(obj).find('.loader').removeClass('hidden');
-
-
-        $.ajax({
-            type: "POST", // or GET
-            url: "/site/rotate-image",
-            data: {id: id, rotate: 'right'},
-            success: function (response) {
-
-                if (response.success == true) {
-
-                    $(obj).find('.shadow').removeClass('hidden');
-                    $(obj).find('.loader').addClass('hidden');
-                    $(obj).attr('data-key', response.file.id);
-                    $(obj).attr('class', response.file.rotateClass);
-                    // $(obj).find('.shadow').html('<a href="#" class="revert"></a><a href="#" class="delete"></a>');
-                    $(obj).find('.img_block .img').attr('style', "background: url('" + escapeTags(response.file.preview) + "') center no-repeat; background-size: cover; ");
-                    $(obj).find('input').attr('value', response.file.id);
-
-                } else {
-                    console.log(response['error_text']);
-                }
-                console.log(response);
-                //$("#someElement").doSomething();
-            },
-            error: function () {
-                // something's gone wrong.
-            }
-        });
-        //
-        //
-        // alert('revert');
-
-        event.preventDefault();
-
-
-    });
-    $("body").on("click", ".files_block a.checkbox", function (event) {
-
-
-        $(this).closest('ul').find('li').removeClass('active');
-        $(this).closest('li').addClass('active');
-        $('.main_image').val($(this).closest('li').attr('data-key'));
-
-
-        //
-        //
-        // alert('revert');
-
-        event.preventDefault();
-
-
-    });
-
-    $(".files-ui").sortable();
 }
 
 
@@ -462,11 +347,8 @@ var noPoi = [
 ];
 map.setOptions({styles: noPoi});
 
-
 $(".rest-info").on("click", "a.close-rest", function (e) {
-
     e.preventDefault();
-
     $(this).closest(".rest-info").addClass("d-none").html("");
     return false;
 });

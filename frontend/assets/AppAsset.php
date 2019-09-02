@@ -21,7 +21,7 @@ class AppAsset extends AssetBundle
         'https://fonts.googleapis.com/css?family=Montserrat:400,700,200',
         'https://use.fontawesome.com/releases/v5.4.1/css/all.css',
         '/dist/growl/jquery.growl.css',
-
+        '/dist/fancybox/jquery.fancybox.min.css',
         '/now-ui-kit/assets/demo/demo.css',
 
     ];
@@ -40,6 +40,7 @@ class AppAsset extends AssetBundle
         '/js/slimscroll.js',
         '/js/main.js',
         '/dist/SimpleAjaxUploader.js',
+        '/dist/fancybox/jquery.fancybox.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.2/jsrender.min.js',
     ];
     public $depends = [

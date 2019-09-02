@@ -3,13 +3,12 @@
 namespace frontend\controllers;
 
 use common\components\BaseController;
+use common\models\Files;
 use common\models\Restaurant;
 use common\models\search\RestaurantSearch;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\Controller;
 
 /**
  * Site controller
@@ -30,7 +29,7 @@ class RestaurantsController extends BaseController
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['index','view','ajax-search','info'],
+                        'actions' => ['index', 'view', 'ajax-search', 'info'],
                         'allow' => true,
                         'roles' => ['@', '?'],
                     ],
@@ -77,11 +76,11 @@ class RestaurantsController extends BaseController
                     'title' => $model->title,
                     'desc' => $model->desc,
                     'url' => Url::to($model->url),
-                    'lng' =>  $model->lng,
-                    'lat' =>  $model->lat,
-                    'phone' =>  null,
-                    'price_category' =>  $model->price_category,
-                    'address' =>  $model->address,
+                    'lng' => $model->lng,
+                    'lat' => $model->lat,
+                    'phone' => null,
+                    'price_category' => $model->price_category,
+                    'address' => $model->address,
 
                 ];
             }))
@@ -111,24 +110,35 @@ class RestaurantsController extends BaseController
         return $this->render('view', ['model' => $model]);
     }
 
-    public function actionInfo(){
+    public function actionInfo()
+    {
         $id = \Yii::$app->request->post('id');
 
         \Yii::$app->response->format = 'json';
         if (!$id) {
             return self::returnError(self::ERROR_NOTFOUND);
         }
-        $model = Restaurant::findOne(['id'=>$id,'status'=>Restaurant::STATUS_ACTIVE]);
+        $model = Restaurant::findOne(['id' => $id, 'status' => Restaurant::STATUS_ACTIVE]);
 
-        if (!$model){
+        if (!$model) {
             return self::returnError(self::ERROR_NOTFOUND);
         }
 
-        return [
-          'html'=>$this->renderPartial('_view',['model'=>$model]),
-            'location'=>$model->location
-        ];
+        $restFiles = Files::find()->joinWith('restaurantFiles')->andWhere(['status' => Files::STATUS_APPROVED, 'rest_id' => $model->id])->all();
 
+        if (!\Yii::$app->user->isGuest) {
+            $userRestFiles = Files::find()->joinWith('restaurantFiles')->andWhere(['rest_id' => $model->id])->andWhere(['<>', 'status', Files::STATUS_APPROVED])->all();
+        }
+
+        return [
+            'html' => $this->renderPartial('_view', [
+                'model' => $model,
+                'restFiles' => $restFiles,
+                'userRestFiles'=> isset($userRestFiles)? $userRestFiles : null
+            ]),
+            'location' => $model->location,
+            'id'=>$model->id
+        ];
 
 
     }

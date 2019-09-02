@@ -24,10 +24,10 @@ use yii\helpers\Html;
     <a href="#" id="rest-uploader" data-url="<?= \yii\helpers\Url::to(['/site/upload-image','type'=>'restaurant','id'=>$model->id]) ?>" class="float-right"><i class="fas fa-image"></i> Добавить фотографию места</a>
     <h5>Photos </h5>
 
-    <?if (0): // images block?>
+    <?if ($restFiles): // images block?>
     <div class="rest-info__images row">
         <? $i = 1; ?>
-        <? foreach ($rF as $image) { ?>
+        <? foreach ($restFiles as $image) { ?>
 
             <?
 
@@ -36,10 +36,10 @@ use yii\helpers\Html;
                     $cl = 'pr-md-0';
                     break;
                 case(2) :
-                    $cl = 'pr-md-2';
+                    $cl = 'px-md-1';
                     break;
                 case(3) :
-                    $cl = 'pl-md-2';
+                    $cl = '  pl-md-0';
                     break;
                 case(4) :
                     $cl = 'pl-md-0';
@@ -49,36 +49,12 @@ use yii\helpers\Html;
 
             ?>
             <div class="  col-md-4 mt-md <?= $cl ?>  ">
-
-                <? if ($image['status'] != 10) : ?>
-
-                    <? if ($model->mprofile_id == $profile_id) { ?>
-
-                        <? if ($model->status == 0) { ?>
-                            <a href="/img/errors/undermoderation.jpg" data-fancybox="imagesSS">
-                                <div class="place-card__image"
-                                     style="background-image: url('/img/errors/undermoderation.jpg') ">
-
-                                </div>
-                            </a>
-                        <? } else { ?>
-
-                        <? } ?>
-                    <? } ?>
-
-                <? else: ?>
-
-                    <a href="<?= $image['filename'] ?>" data-fancybox="imagesSS">
-                        <div class="place-card__image"
-                             style="background-image: url('<?= $image['thumb'] ?>') ">
-
+                    <a href="<?= $image->filename ?>" data-fancybox="imagesSS">
+                        <div class="rest-card__image"
+                             style="background-image: url('<?= $image->preview ?>') ">
                         </div>
                     </a>
-                <? endif; ?>
 
-
-                <!--                                --><? //= var_dump($image['status']) ?>
-                <!--                                --><? //=$image['thumb']?>
 
             </div>
             <? $i++;
@@ -86,4 +62,6 @@ use yii\helpers\Html;
         <? } ?>
     </div>
     <?endif;?>
+    <div class="m-3"></div>
 </div>
+

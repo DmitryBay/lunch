@@ -236,3 +236,10 @@ a.desc:after {
     border: 1px solid #ff9400;
     /* border-radius: 5px; */
 }
+
+.rest-card__image {
+    background-position: 50% 50% !important;
+    background-repeat: no-repeat !important;
+    background-size: cover;
+    height: 100px;
+}

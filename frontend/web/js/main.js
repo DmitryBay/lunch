@@ -20,3 +20,8 @@ function showError(xhr, code, text) {
         $.growl.error({message: 'Ошибка(' + xhr.status + '): ' + text});
     }
 }
+
+
+$("img").on("error", function () {
+    $(this).attr("src", "/img/no_image.jpg");
+});
