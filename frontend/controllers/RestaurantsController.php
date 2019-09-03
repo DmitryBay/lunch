@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use app\models\MenuItems;
+use app\models\MProfile;
 use common\components\BaseController;
 use common\models\Files;
 use common\models\Restaurant;
@@ -9,6 +11,7 @@ use common\models\search\RestaurantSearch;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -92,7 +95,6 @@ class RestaurantsController extends BaseController
     public function actionAdd()
     {
         $model = new Restaurant();
-
         $model->load(\Yii::$app->request->post());
         if ($model->validate()) {
             if ($model->save()) {
@@ -103,9 +105,13 @@ class RestaurantsController extends BaseController
         return $this->render('add', ['model' => $model]);
     }
 
+    public function actionAddMenuItem(){
+        $model = new MenuItems();
+    }
+
     public function actionView($id)
     {
-        $model = Restaurant::find()->andWhere(['id' => $id])->one();
+        $model = $this->findModel($id);
 
         return $this->render('view', ['model' => $model]);
     }
@@ -115,24 +121,20 @@ class RestaurantsController extends BaseController
         $id = \Yii::$app->request->post('id');
 
         \Yii::$app->response->format = 'json';
-        if (!$id) {
-            return self::returnError(self::ERROR_NOTFOUND);
-        }
-        $model = Restaurant::findOne(['id' => $id, 'status' => Restaurant::STATUS_ACTIVE]);
+        $model = $this->findModel($id);
 
-        if (!$model) {
-            return self::returnError(self::ERROR_NOTFOUND);
-        }
-
+        // todo get from model
         $restFiles = Files::find()->joinWith('restaurantFiles')->andWhere(['status' => Files::STATUS_APPROVED, 'rest_id' => $model->id])->all();
-
         if (!\Yii::$app->user->isGuest) {
             $userRestFiles = Files::find()->joinWith('restaurantFiles')->andWhere(['rest_id' => $model->id])->andWhere(['<>', 'status', Files::STATUS_APPROVED])->all();
         }
 
+        $item = new MenuItems();
+
         return [
             'html' => $this->renderPartial('_view', [
                 'model' => $model,
+                'item' => $item,
                 'restFiles' => $restFiles,
                 'userRestFiles'=> isset($userRestFiles)? $userRestFiles : null
             ]),
@@ -142,5 +144,22 @@ class RestaurantsController extends BaseController
 
 
     }
+    /**
+     * Finds the MProfile model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Restaurant the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+
+        if (($model = Restaurant::findOne(['id' => $id, 'status' => Restaurant::STATUS_ACTIVE])) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
 
 }
